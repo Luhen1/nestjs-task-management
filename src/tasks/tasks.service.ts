@@ -11,6 +11,7 @@ export class TasksService {
         return this.tasks;
     }
 
+
     getTaskById(id: string): Task { // result is an array of tasks
         return this.tasks.find((task) => task.id === id);
     }
@@ -36,5 +37,5 @@ export class TasksService {
         const task = this.getTaskById(id);
         task.status = status;
         return task;   
-    }
+
 }
