@@ -51,7 +51,8 @@ export class TasksService {
     }
 
     deleteTask(id: string): void { // void because i dont want to return anything
-        this.tasks = this.tasks.filter((task) => task.id !== id); // tasks has a new array that doesnt have that task. delete this id task and returning the rest
+        const found = this.getTaskById(id); // calls the get task by id function thats already has the error handling exception for us.
+        this.tasks = this.tasks.filter((task) => task.id !== found.id); // tasks has a new array that doesnt have that task. delete this id task and returning the rest
     }
 
     createTask(createTaskDto: CreateTaskDto): Task{
