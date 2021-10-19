@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import {  TaskStatus } from './task-status.enum';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTaskFilterDto } from './dto/get-tasks-filter.dto';
+import { Task } from "./entity/task.entity";
 import { InjectRepository } from '@nestjs/typeorm';
 import { TasksRepository } from './repository/tasks.repository';
 
@@ -11,13 +12,26 @@ export class TasksService {
         @InjectRepository(TasksRepository)
         private tasksRepository: TasksRepository,
     ) {}
+    
+    getTaskById(id:string): Promise<Task> {
+       return this.tasksRepository.getTaskById(id);
+    }
 
+    getTasks(filterDto: GetTaskFilterDto): Promise<Task[]> {    
+        return this.tasksRepository.getTasks(filterDto);
+    }
 
+    createTask(createTaskDto: CreateTaskDto): Promise<Task>{
+        return this.tasksRepository.createTask(createTaskDto);
+    }
 
+     deleteTask(id: string): Promise<void> { // void because i dont want to return anything
+        return this.tasksRepository.deleteTask(id);
+    }
 
-
-
-
+    updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
+        return this.tasksRepository.updateTaskStatus(id, status);  
+    }
 
 
     // private tasks: Task[] = []; // TASK is our model with array. So our tasks has a array of the type task
