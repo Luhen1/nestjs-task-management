@@ -1,4 +1,4 @@
-  import {
+import {
   Body,
   Controller,
   Get,
@@ -13,7 +13,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTaskFilterDto } from './dto/get-tasks-filter.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 import { TaskStatus } from './task-status.enum';
-import { Task } from "./entity/task.entity";
+import { Task } from './entity/task.entity';
 import { TasksService } from './tasks.service';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
@@ -25,23 +25,24 @@ import { User } from 'src/auth/entity/user.entity';
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
-  
   @Get('/:id')
   getTaskById(@Param('id') id: string): Promise<Task> {
-
     return this.tasksService.getTaskById(id);
   }
 
   @Get()
-  getTasks(@Query() fillterDto: GetTaskFilterDto): Promise<Task[]> {
-    return this.tasksService.getTasks(fillterDto);
+  getTasks(
+    @Query() fillterDto: GetTaskFilterDto,
+    @GetUser() user: User,
+  ): Promise<Task[]> {
+    return this.tasksService.getTasks(fillterDto, user);
   }
-  
+
   @Post()
   createTask(
     @Body() CreateTaskDto: CreateTaskDto,
     @GetUser() user: User, // when creating task, fetch user
-    ): Promise<Task> {
+  ): Promise<Task> {
     return this.tasksService.createTask(CreateTaskDto, user);
   }
 

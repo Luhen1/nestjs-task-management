@@ -18,15 +18,20 @@ export class TasksRepository extends Repository<Task> {
          return found;
     }
    
-    async getTasks(filterDto: GetTaskFilterDto):Promise<Task[]>{
+    async getTasks(filterDto: GetTaskFilterDto, user: User):Promise<Task[]>{
         const { status, search } = filterDto;
         const query = this.createQueryBuilder('task'); // this query (Consulta) makes a sql that selects task in our database where the full command is "SELECT task FROM TASK"
+
+        query.where({ user });
 
         if (status) {
             query.andWhere('task.status = :status', {status});
         }
         if (search) {
-            query.andWhere('LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search)', {search: `%${search}%` }, );
+            query.andWhere(
+                '(LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search))', 
+                {search: `%${search}%` }, 
+            );
         }
         
         const tasks = await query.getMany();
