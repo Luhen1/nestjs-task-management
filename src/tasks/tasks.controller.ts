@@ -16,6 +16,8 @@ import { TaskStatus } from './task-status.enum';
 import { Task } from "./entity/task.entity";
 import { TasksService } from './tasks.service';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/decorators/get-user.decorator';
+import { User } from 'src/auth/entity/user.entity';
 
 //Using guard at controller level. not in each specific tasks
 @Controller('tasks')
@@ -36,8 +38,11 @@ export class TasksController {
   }
   
   @Post()
-  createTask(@Body() CreateTaskDto: CreateTaskDto): Promise<Task> {
-    return this.tasksService.createTask(CreateTaskDto);
+  createTask(
+    @Body() CreateTaskDto: CreateTaskDto,
+    @GetUser() user: User, // when creating task, fetch user
+    ): Promise<Task> {
+    return this.tasksService.createTask(CreateTaskDto, user);
   }
 
   @Delete('/:id')
