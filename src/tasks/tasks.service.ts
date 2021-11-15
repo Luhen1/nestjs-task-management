@@ -37,7 +37,7 @@ export class TasksService {
     // remove you have to pass parameters so that they can fetch the id first then remove. much longer process and can increase costs for the company
     
     async deleteTask(id: string, user: User): Promise<void> {
-        const result = await this.tasksRepository.delete({ id, user });
+        const result = await this.tasksRepository.delete({ id, user }); // there is no where {}
     
         if (result.affected === 0) {
           throw new NotFoundException(`Task with ID "${id}" not found`);
