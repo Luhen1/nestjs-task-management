@@ -9,14 +9,6 @@ import { TaskStatus } from "../task-status.enum";
 @EntityRepository(Task) // shows which is entity is being used for our repository
 export class TasksRepository extends Repository<Task> {
    
-    async getTaskById(id:string): Promise<Task> {
-        const found = await this.findOne(id);
-        if (!found){
-           throw new NotFoundException(`Task with ID "${id}" not found`); // you can customize this exception
-         }
-         
-         return found;
-    }
    
     async getTasks(filterDto: GetTaskFilterDto, user: User):Promise<Task[]>{
         const { status, search } = filterDto;
@@ -50,23 +42,5 @@ export class TasksRepository extends Repository<Task> {
 
         await this.save(task);
         return task;
-    }
-
-
-    // Delete is 1 call from the database, you get id and delete it. 
-    // remove you have to pass parameters so that they can fetch the id first then remove. much longer process and can increase costs for the company
-    async deleteTask(id: string): Promise<void> { 
-        const result = await this.delete(id);
-        if (result.affected === 0) {
-            throw new NotFoundException(`Task with ID "${id}" not found`);
-        }
-    }
-
-    async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
-        const task = await this.getTaskById(id);
-        task.status = status;
-        await this.save(task);
-
-        return task;  
     }
 }
