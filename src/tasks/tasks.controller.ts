@@ -28,7 +28,7 @@ import { ConfigService } from '@nestjs/config';
 export class TasksController {
   constructor(
     // if you need config service. type
-    // private configService: ConfigService
+    private configService: ConfigService,
     private tasksService: TasksService,
     ) {
       // heres show you provide value when you start application. 
