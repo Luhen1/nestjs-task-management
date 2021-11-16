@@ -18,12 +18,22 @@ import { TasksService } from './tasks.service';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { User } from 'src/auth/entity/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 //Using guard at controller level. not in each specific tasks
+
+//when using config management. you can define env via terminal using TEST_VALUE=blablala yarn start:dev
 @Controller('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
-  constructor(private tasksService: TasksService) {}
+  constructor(
+    // if you need config service. type
+    // private configService: ConfigService
+    private tasksService: TasksService,
+    ) {
+      // heres show you provide value when you start application. 
+      //configService.get('TEST_VALUE')  // this test value is defined in our env.stage.dev
+    }
 
   @Get('/:id')
   getTaskById(
