@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { TasksRepository } from '../repository/tasks.repository';
@@ -7,6 +8,7 @@ import { TasksService } from '../tasks.service';
 
 const mockTaskRepository = () => ({
     getTasks: jest.fn(), //mock functions
+    findOne:  jest.fn(), //mock functions
 });
 
 const mockUser = {
@@ -59,6 +61,25 @@ describe('TaskService', () => {
             expect(result).toEqual('someValue');
         });
     });
+
+    describe('getTasksById', () => {
+        it('calls TasksRepository.findOne and returns the result', async () => {
+            const mockTask = {
+                title: 'Test title',
+                description: 'Test description',
+                id: "someid",
+                status: TaskStatus.OPEN,
+            };
+
+            tasksRepository.findOne.mockResolvedValue(mockTask);
+            const result = await tasksRepository.getTasks('someId', mockUser);
+            expect(result).toEqual(mockTask);
+        });
+        it('calls TasksRepository.findOne and returns the result', async () => {
+            tasksRepository.findOne.mockResolvedValue(null); // saying and throwing a exception
+            expect(tasksService.getTaskById('someId', mockUser)).rejects.toThrow(NotFoundException);
+        })
+    })
 });
 
 //Links [1] - >  https://archive.jestjs.io/docs/en/22.x/mock-function-api#mockfnmockreturnvaluevalue
